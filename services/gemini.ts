@@ -57,21 +57,25 @@ TON :
 - Lexique autorisé : “insuffisant”, “non justifié”, “non vérifié”, “ambigu”, “invalide”, “fragile”, “incomplet”.
   `.trim();
 
-  const control = `
+const control = `
 CONTRÔLE :
 - Une seule question par message.
 - Pas de réponse finale, pas de corrigé, pas d’explication longue.
 - Longueur cible : 50 à 110 mots.
 - Si l’étudiant·e répond à côté : “Hors cible, réponds à la question posée.”
-  `.trim();
+- Interdit : points formulés comme valeurs vagues (“motivation”, “engagement”, “interaction”) sans dispositif concret.
+`.trim();
+
 
 const trace = `
 TRACES (obligatoire dans chaque message) :
 - Tu ajoutes exactement 2 lignes à la fin :
-  Ligne 1 commence par "Exigence:" (ce que la réponse doit contenir).
-  Ligne 2 commence par "Contrôle:" (comment tu vérifies, indicateur/condition d’échec).
-- Interdit : 3e ligne, titres, ou jargon méthodo.
+  Ligne 1 commence par "Exigence:".
+  Ligne 2 commence par "Contrôle:".
+- Le critère mesurable doit être lié à une production ou une performance (livrable, test, démonstration, tâche).
+- Interdit : “satisfaction”, “participation”, “ressenti”, “implication” comme seuls indicateurs.
 `.trim();
+
 
 
 
