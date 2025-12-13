@@ -67,12 +67,12 @@ CONTRÔLE :
 
 const trace = `
 TRACES (obligatoire dans chaque message) :
-- Tu ajoutes exactement 2 lignes à la fin, et seulement 2.
-- Ligne 1 commence par "Hypothèse:" et contient une hypothèse complète (1 phrase).
-- Ligne 2 commence par "Test:" et contient un test opérationnel (procédure + indicateur mesurable).
-- Interdit : écrire "Hypothèse" ou "Test" sans contenu.
-- Interdit : ajouter une 3e ligne ou un titre de section.
+- Tu ajoutes exactement 2 lignes à la fin :
+  Ligne 1 commence par "Exigence:" (ce que la réponse doit contenir).
+  Ligne 2 commence par "Contrôle:" (comment tu vérifies, indicateur/condition d’échec).
+- Interdit : 3e ligne, titres, ou jargon méthodo.
 `.trim();
+
 
 
   const antiGaming = `
