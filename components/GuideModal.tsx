@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert } from 'lucide-react';
+import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert, Lock, Database } from 'lucide-react';
 
 interface GuideModalProps {
   onClose: () => void;
@@ -20,6 +20,28 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         </div>
         
         <div className="p-6 space-y-6 text-slate-700">
+          
+          {/* Section Confidentialité / RGPD Ajoutée */}
+          <section className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+             <h3 className="font-bold text-slate-900 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+              <Lock size={16} className="text-emerald-600" /> Confidentialité & Données (RGPD)
+            </h3>
+            <div className="text-xs text-slate-600 space-y-2">
+              <p className="flex items-start gap-2">
+                <Database size={14} className="mt-0.5 shrink-0 text-slate-400" />
+                <span>
+                  <strong>Aucun stockage serveur :</strong> Cette application est "stateless". Aucune conversation, aucun nom ni aucune donnée n'est sauvegardé sur nos serveurs.
+                </span>
+              </p>
+              <p>
+                <strong>Données volatiles :</strong> Toutes les données résident uniquement dans la mémoire vive de votre appareil. <strong>Si vous rafraîchissez la page ou fermez l'onglet, tout est définitivement effacé.</strong>
+              </p>
+              <p>
+                <strong>Sous-traitance IA :</strong> Les échanges sont traités par l'API Google Gemini. Nous vous conseillons de ne jamais partager d'informations personnelles sensibles (secrets médicaux, bancaires, etc.) dans la conversation. L'usage d'un pseudonyme est autorisé.
+              </p>
+            </div>
+          </section>
+
           <section>
             <h3 className="font-bold text-lg text-slate-900 mb-2">À quoi sert cet outil ?</h3>
             <p className="text-sm leading-relaxed">
