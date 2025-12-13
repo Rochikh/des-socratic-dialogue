@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { SocraticMode, SessionConfig } from '../types';
 import { BrainCircuit, BookOpen, User, HelpCircle, ShieldAlert, MessageCircleQuestion } from 'lucide-react';
-import GuideModal from './GuideModal';
+import { GuideModal } from './GuideModal';
 
 interface SetupViewProps {
   onStart: (config: SessionConfig) => void;
 }
 
-const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
+export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
   const [name, setName] = useState('');
   const [topic, setTopic] = useState('');
   const [mode, setMode] = useState<SocraticMode>(SocraticMode.TUTOR);
@@ -123,5 +123,3 @@ const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
     </div>
   );
 };
-
-export default SetupView;
