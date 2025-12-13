@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Chat } from "@google/genai";
 import { Message, SessionConfig } from '../types';
 import { sendMessage } from '../services/gemini';
-import GuideModal from './GuideModal';
+import { GuideModal } from './GuideModal';
 
 interface ChatViewProps {
   chatInstance: Chat | null;
@@ -14,7 +14,7 @@ interface ChatViewProps {
   onFinish: (aiDeclaration: string) => void;
 }
 
-const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messages, setMessages, onFinish }) => {
+export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messages, setMessages, onFinish }) => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showDeclarationModal, setShowDeclarationModal] = useState(false);
@@ -238,5 +238,3 @@ const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messages, set
     </div>
   );
 };
-
-export default ChatView;
