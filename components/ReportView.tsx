@@ -13,7 +13,7 @@ interface ReportViewProps {
   onRestart: () => void;
 }
 
-const ReportView: React.FC<ReportViewProps> = ({ config, transcript, aiDeclaration, onRestart }) => {
+export const ReportView: React.FC<ReportViewProps> = ({ config, transcript, aiDeclaration, onRestart }) => {
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -409,5 +409,3 @@ ${transcript.map(m => `[${m.role === 'user' ? 'ÉTUDIANT·E' : 'IA'}]: ${m.text}
     </div>
   );
 };
-
-export default ReportView;
