@@ -21,6 +21,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
   const [showGuide, setShowGuide] = useState(false);
   const [declarationText, setDeclarationText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Initialize conversation
   useEffect(() => {
@@ -52,6 +53,16 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      // Reset height to auto to correctly calculate scrollHeight for shrinking
+      textareaRef.current.style.height = 'auto';
+      // Set new height based on content, maxing out at 160px
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 160)}px`;
+    }
+  }, [inputText]);
 
   const handleSend = async () => {
     if (!inputText.trim() || !chatInstance || isLoading) return;
@@ -186,14 +197,14 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
             <div
               className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-4 shadow-sm ${
                 msg.role === 'user'
-                  ? 'bg-indigo-600 text-white rounded-br-none'
+                  ? 'bg-slate-800 text-white rounded-br-none' // CHANGEMENT COULEUR ICI
                   : 'bg-white text-slate-800 border border-slate-200 rounded-bl-none'
               }`}
             >
               <div className={`prose prose-sm max-w-none ${msg.role === 'user' ? 'prose-invert' : ''}`}>
                  <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
-              <div className={`text-[10px] mt-2 opacity-70 ${msg.role === 'user' ? 'text-indigo-200' : 'text-slate-400'}`}>
+              <div className={`text-[10px] mt-2 opacity-70 ${msg.role === 'user' ? 'text-slate-300' : 'text-slate-400'}`}>
                 {msg.role === 'model' ? 'DES Agent' : config.studentName} • {new Date(msg.timestamp).toLocaleTimeString()}
               </div>
             </div>
@@ -215,13 +226,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
       <div className="bg-white border-t border-slate-200 p-4 sm:p-6">
         <div className="max-w-4xl mx-auto relative">
           <textarea
+            ref={textareaRef}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Écris ta réponse (sois explicite sur ton raisonnement)..."
-            className="w-full bg-slate-100 text-slate-900 rounded-xl pl-4 pr-12 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-transparent focus:border-transparent transition-all"
+            className="w-full bg-slate-50 text-slate-900 rounded-xl pl-4 pr-12 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-slate-500 border border-slate-200 focus:border-transparent transition-all min-h-[56px] overflow-hidden"
             rows={1}
-            style={{ minHeight: '50px', maxHeight: '150px' }}
           />
           <button
             onClick={handleSend}
