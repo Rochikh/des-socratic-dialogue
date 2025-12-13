@@ -8,10 +8,11 @@ import { Message, SocraticMode, AnalysisData } from "../types";
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 /**
- * Modèle FORCE : gemini-3-pro-preview
- * Ce modèle supporte le "thinkingConfig" pour un raisonnement approfondi.
+ * Modèle FORCE : gemini-2.5-pro
+ * C'est le modèle "Gold Standard" pour le raisonnement.
+ * Il supporte le "thinkingConfig" (budget de pensée) jusqu'à 32k tokens.
  */
-const MODEL_NAME = "gemini-3-pro-preview";
+const MODEL_NAME = "gemini-2.5-pro";
 
 /** Réglages */
 const CHAT_TEMPERATURE = Number(process.env.GENAI_CHAT_TEMPERATURE ?? 0.7);
@@ -22,7 +23,7 @@ const TUTOR_NAME = process.env.DES_TUTOR_NAME || "ARGOS";
 
 /** Tampon de version */
 export const PROMPT_VERSION =
-  process.env.DES_PROMPT_VERSION || "2025-12-13_argos_phased_v2_uxcredits_thinking";
+  process.env.DES_PROMPT_VERSION || "2025-12-13_argos_phased_v2_uxcredits_thinking_pro2.5";
 
 const buildCommonSystem = (topic: string) => {
   const identity = `
@@ -209,8 +210,9 @@ export const createChatSession = (mode: SocraticMode, topic: string): Chat => {
     model: MODEL_NAME,
     config: {
       systemInstruction,
-      // Budget de pensée pour la conversation
-      thinkingConfig: { thinkingBudget: 1024 }
+      // Budget de pensée : 2.5 Pro peut aller jusqu'à 32k.
+      // 2048 est suffisant pour une réponse rapide mais réfléchie.
+      thinkingConfig: { thinkingBudget: 2048 }
     },
   });
 };
@@ -299,8 +301,8 @@ JSON attendu :
       model: MODEL_NAME,
       contents: prompt,
       config: {
-        // Budget de pensée augmenté pour l'analyse finale
-        thinkingConfig: { thinkingBudget: 2048 },
+        // Pour l'analyse finale, on augmente le budget de pensée pour maximiser la finesse de l'évaluation
+        thinkingConfig: { thinkingBudget: 4096 },
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
