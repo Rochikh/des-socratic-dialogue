@@ -79,7 +79,9 @@ export const generateAnalysis = async (transcript: Message[], topic: string, aiD
     .join('\n');
 
   const prompt = `
-    Tu es un Expert Pédagogique Francophone.
+    RÔLE : Expert Pédagogique Francophone.
+    LANGUE DE SORTIE : FRANÇAIS (FRENCH) UNIQUEMENT.
+    
     Ta mission est d'évaluer une session de Dialogue Évaluatif Socratique.
 
     Sujet : "${topic}".
@@ -88,8 +90,8 @@ export const generateAnalysis = async (transcript: Message[], topic: string, aiD
     ${transcriptText}
 
     CONSIGNE ABSOLUE DE LANGUE :
-    Toutes les valeurs textuelles du JSON doivent être rédigées en FRANÇAIS, même si les clés sont en anglais.
-    Utilise le tutoiement et l'écriture inclusive.
+    Toutes les chaînes de caractères (strings) dans le JSON de réponse doivent être en FRANÇAIS.
+    Ne traduis pas les clés du JSON (ex: garde "summary", "keyStrengths"), mais traduis leurs VALEURS.
 
     OBJECTIFS D'ANALYSE :
     1. Itération : L'étudiant·e a-t-il·elle affiné sa pensée ?
@@ -108,7 +110,7 @@ export const generateAnalysis = async (transcript: Message[], topic: string, aiD
           properties: {
             summary: { 
               type: Type.STRING,
-              description: "Résumé narratif pédagogique détaillé, impérativement rédigé en FRANÇAIS." 
+              description: "Résumé narratif pédagogique détaillé. DOIT ÊTRE EN FRANÇAIS." 
             },
             reasoningScore: { type: Type.INTEGER },
             clarityScore: { type: Type.INTEGER },
@@ -118,12 +120,12 @@ export const generateAnalysis = async (transcript: Message[], topic: string, aiD
             keyStrengths: { 
               type: Type.ARRAY, 
               items: { type: Type.STRING },
-              description: "Liste des points forts identifiés, rédigés en FRANÇAIS."
+              description: "Liste des points forts identifiés. CHAQUE POINT DOIT ÊTRE EN FRANÇAIS."
             },
             weaknesses: { 
               type: Type.ARRAY, 
               items: { type: Type.STRING },
-              description: "Liste des points d'amélioration, rédigés en FRANÇAIS."
+              description: "Liste des points d'amélioration. CHAQUE POINT DOIT ÊTRE EN FRANÇAIS."
             },
           },
           required: ["summary", "reasoningScore", "clarityScore", "skepticismScore", "processScore", "reflectionScore", "keyStrengths", "weaknesses"]
