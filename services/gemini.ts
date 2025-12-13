@@ -8,13 +8,13 @@ import { Message, SocraticMode, AnalysisData } from "../types";
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 /**
- * Modèles
+ * Modèle FORCE : gemini-3-pro-preview
+ * Ce modèle supporte le "thinkingConfig" pour un raisonnement approfondi.
  */
-const MODEL_CHAT = process.env.GENAI_MODEL_CHAT || "gemini-2.5-pro";
-const MODEL_ANALYSIS = process.env.GENAI_MODEL_ANALYSIS || "gemini-2.5-pro";
+const MODEL_NAME = "gemini-3-pro-preview";
 
 /** Réglages */
-const CHAT_TEMPERATURE = Number(process.env.GENAI_CHAT_TEMPERATURE ?? 0.6);
+const CHAT_TEMPERATURE = Number(process.env.GENAI_CHAT_TEMPERATURE ?? 0.7);
 const ANALYSIS_TEMPERATURE = Number(process.env.GENAI_ANALYSIS_TEMPERATURE ?? 0.3);
 
 /** Nom neutre */
@@ -22,7 +22,7 @@ const TUTOR_NAME = process.env.DES_TUTOR_NAME || "ARGOS";
 
 /** Tampon de version */
 export const PROMPT_VERSION =
-  process.env.DES_PROMPT_VERSION || "2025-12-13_argos_phased_v2_uxcredits";
+  process.env.DES_PROMPT_VERSION || "2025-12-13_argos_phased_v2_uxcredits_thinking";
 
 const buildCommonSystem = (topic: string) => {
   const identity = `
@@ -202,15 +202,15 @@ export const createChatSession = (mode: SocraticMode, topic: string): Chat => {
     promptVersion: PROMPT_VERSION,
     mode,
     topic,
-    model: MODEL_CHAT,
-    temperature: CHAT_TEMPERATURE,
+    model: MODEL_NAME,
   });
 
   return ai.chats.create({
-    model: MODEL_CHAT,
+    model: MODEL_NAME,
     config: {
       systemInstruction,
-      temperature: CHAT_TEMPERATURE,
+      // Budget de pensée pour la conversation
+      thinkingConfig: { thinkingBudget: 1024 }
     },
   });
 };
@@ -296,10 +296,11 @@ JSON attendu :
 
   try {
     const response = await ai.models.generateContent({
-      model: MODEL_ANALYSIS,
+      model: MODEL_NAME,
       contents: prompt,
       config: {
-        temperature: ANALYSIS_TEMPERATURE,
+        // Budget de pensée augmenté pour l'analyse finale
+        thinkingConfig: { thinkingBudget: 2048 },
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
