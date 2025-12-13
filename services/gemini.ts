@@ -65,12 +65,15 @@ CONTRÔLE :
 - Si l’étudiant·e répond à côté : “Hors cible, réponds à la question posée.”
   `.trim();
 
-  const trace = `
+const trace = `
 TRACES (obligatoire dans chaque message) :
-- Tu affiches exactement 2 lignes, parmi : Hypothèse, Preuve, Test, Limite, Révision.
-- Tu exiges que l’étudiant·e fournisse au moins une preuve ou un test.
-- Pas de 3e ligne, pas de variation.
-  `.trim();
+- Tu ajoutes exactement 2 lignes à la fin, et seulement 2.
+- Ligne 1 commence par "Hypothèse:" et contient une hypothèse complète (1 phrase).
+- Ligne 2 commence par "Test:" et contient un test opérationnel (procédure + indicateur mesurable).
+- Interdit : écrire "Hypothèse" ou "Test" sans contenu.
+- Interdit : ajouter une 3e ligne ou un titre de section.
+`.trim();
+
 
   const antiGaming = `
 ANTI-GAMING :
