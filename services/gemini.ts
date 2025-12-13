@@ -10,7 +10,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 /**
  * Modèles
  */
-const MODEL_CHAT = process.env.GENAI_MODEL_CHAT || "gemini-2.5-flash";
+const MODEL_CHAT = process.env.GENAI_MODEL_CHAT || "gemini-2.5-pro";
 const MODEL_ANALYSIS = process.env.GENAI_MODEL_ANALYSIS || "gemini-2.5-pro";
 
 /** Réglages */
