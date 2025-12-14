@@ -23,24 +23,34 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
   return (
     <div className="h-full overflow-y-auto flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 p-4 relative">
       
-      {/* Bouton d'aide flottant */}
+      {/* Bouton d'aide flottant - Rendu plus visible (Opaque + Z-Index) */}
       <button 
         onClick={() => setShowGuide(true)}
-        className="absolute top-6 right-6 flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors bg-white/50 px-3 py-1.5 rounded-full border border-slate-200 backdrop-blur-sm shadow-sm"
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2 text-slate-600 hover:text-indigo-600 transition-all bg-white px-4 py-2 rounded-full border border-slate-200 shadow-md hover:shadow-lg"
       >
         <HelpCircle size={18} />
-        <span className="text-sm font-medium">Mode d'emploi</span>
+        <span className="text-sm font-bold">Mode d'emploi</span>
       </button>
 
       {/* Guide Modal */}
       {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
 
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 my-auto z-0">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 my-auto z-10 relative">
         <div className="flex items-center justify-center mb-6 text-indigo-600">
           <BrainCircuit size={48} />
         </div>
         <h1 className="text-3xl font-bold text-center text-slate-800 mb-2">DES</h1>
-        <p className="text-center text-slate-500 mb-8">Dialogue Évaluatif Socratique</p>
+        <p className="text-center text-slate-500">Dialogue Évaluatif Socratique</p>
+        
+        {/* Lien de secours si le bouton flottant est raté */}
+        <div className="text-center mb-8 mt-2">
+          <button 
+            onClick={() => setShowGuide(true)}
+            className="text-xs text-indigo-600 hover:text-indigo-800 underline font-medium"
+          >
+            Lire le guide d'utilisation
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
