@@ -105,6 +105,12 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart, onResume }) => {
             <Upload size={16} />
             Reprendre une session existante (.json)
           </button>
+          
+          {/* Texte explicatif ajouté ici */}
+          <p className="text-[10px] text-slate-400 text-center mt-2">
+            Importe le fichier JSON téléchargé à la fin d'une session précédente.
+          </p>
+
           {importError && (
             <div className="mt-2 text-xs text-rose-600 flex items-center gap-1 justify-center">
               <AlertCircle size={12} /> {importError}
