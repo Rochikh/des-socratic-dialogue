@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { SocraticMode, SessionConfig } from '../types';
-import { BrainCircuit, BookOpen, User, HelpCircle, ShieldAlert, MessageCircleQuestion } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { SocraticMode, SessionConfig, Message } from '../types';
+import { BrainCircuit, BookOpen, User, HelpCircle, ShieldAlert, MessageCircleQuestion, Upload, AlertCircle } from 'lucide-react';
 import { GuideModal } from './GuideModal';
 
 interface SetupViewProps {
   onStart: (config: SessionConfig) => void;
+  onResume: (config: SessionConfig, messages: Message[], aiDeclaration: string) => void;
 }
 
-export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
+export const SetupView: React.FC<SetupViewProps> = ({ onStart, onResume }) => {
   const [name, setName] = useState('');
   const [topic, setTopic] = useState('');
   const [mode, setMode] = useState<SocraticMode>(SocraticMode.TUTOR);
   const [showGuide, setShowGuide] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,10 +23,44 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
     }
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setImportError(null);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const json = JSON.parse(event.target?.result as string);
+          
+          // Validation basique de la structure du fichier DES
+          if (!json.metadata || !json.transcript) {
+            throw new Error("Format de fichier invalide. Ce n'est pas un rapport DES.");
+          }
+
+          const resumedConfig: SessionConfig = {
+            studentName: json.metadata.student || "Étudiant Inconnu",
+            topic: json.metadata.topic || "Sujet Inconnu",
+            mode: json.metadata.mode || SocraticMode.TUTOR
+          };
+          
+          const messages: Message[] = json.transcript || [];
+          const aiDeclaration = json.aiDeclaration || "";
+
+          onResume(resumedConfig, messages, aiDeclaration);
+        } catch (err) {
+          console.error(err);
+          setImportError("Impossible de lire ce fichier. Assurez-vous qu'il s'agit d'un export JSON valide du DES.");
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className="h-full overflow-y-auto flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 p-4 relative">
       
-      {/* Bouton d'aide flottant - Rendu plus visible (Opaque + Z-Index) */}
+      {/* Bouton d'aide flottant */}
       <button 
         onClick={() => setShowGuide(true)}
         className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2 text-slate-600 hover:text-indigo-600 transition-all bg-white px-4 py-2 rounded-full border border-slate-200 shadow-md hover:shadow-lg"
@@ -35,14 +72,13 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
       {/* Guide Modal */}
       {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
 
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 my-auto z-10 relative">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200 my-auto z-10 relative animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex items-center justify-center mb-6 text-indigo-600">
           <BrainCircuit size={48} />
         </div>
         <h1 className="text-3xl font-bold text-center text-slate-800 mb-2">DES</h1>
         <p className="text-center text-slate-500">Dialogue Évaluatif Socratique</p>
         
-        {/* Lien de secours si le bouton flottant est raté */}
         <div className="text-center mb-8 mt-2">
           <button 
             onClick={() => setShowGuide(true)}
@@ -50,6 +86,30 @@ export const SetupView: React.FC<SetupViewProps> = ({ onStart }) => {
           >
             Lire le guide d'utilisation
           </button>
+        </div>
+
+        {/* Zone de Restauration de Session */}
+        <div className="mb-6 pb-6 border-b border-slate-100">
+          <input 
+            type="file" 
+            accept=".json" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            className="hidden" 
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full py-2 px-4 bg-slate-50 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-100 hover:border-slate-300 transition-all flex items-center justify-center gap-2 border-dashed"
+          >
+            <Upload size={16} />
+            Reprendre une session existante (.json)
+          </button>
+          {importError && (
+            <div className="mt-2 text-xs text-rose-600 flex items-center gap-1 justify-center">
+              <AlertCircle size={12} /> {importError}
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
