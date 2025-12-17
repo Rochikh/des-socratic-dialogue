@@ -1,4 +1,4 @@
-import { GoogleGenAI, Chat, Type } from "@google/genai";
+import { GoogleGenAI, Chat, Type, Content } from "@google/genai";
 import { Message, SocraticMode, AnalysisData } from "../types";
 
 /**
@@ -22,7 +22,7 @@ const TUTOR_NAME = process.env.DES_TUTOR_NAME || "ARGOS";
 /** Tampon de version */
 export const PROMPT_VERSION =
   process.env.DES_PROMPT_VERSION ||
-  "2025-12-17_argos_phased_v6_intent_level_semantic_guard_domain_regimes";
+  "2025-12-17_argos_phased_v6_intent_level_semantic_guard_domain_regimes_with_history";
 
 const buildCommonSystem = (topic: string) => {
   const identity = `
@@ -238,8 +238,13 @@ Fournis le "Texte à auditer" puis :
 
 /**
  * Initializes a chat session with specific system instructions based on the selected mode.
+ * UPDATED: Accepts historyMessages to support session resume.
  */
-export const createChatSession = (mode: SocraticMode, topic: string): Chat => {
+export const createChatSession = (
+  mode: SocraticMode, 
+  topic: string, 
+  historyMessages: Message[] = []
+): Chat => {
   const systemInstruction =
     mode === SocraticMode.TUTOR ? buildTutorSystem(topic) : buildCriticSystem(topic);
 
@@ -249,10 +254,18 @@ export const createChatSession = (mode: SocraticMode, topic: string): Chat => {
     mode,
     topic,
     model: MODEL_NAME,
+    historyLength: historyMessages.length
   });
+
+  // Convert internal Message format to Google GenAI Content format
+  const history: Content[] = historyMessages.map(msg => ({
+    role: msg.role,
+    parts: [{ text: msg.text }]
+  }));
 
   return ai.chats.create({
     model: MODEL_NAME,
+    history: history, // Inject restored history here
     config: {
       systemInstruction,
       temperature: CHAT_TEMPERATURE,
