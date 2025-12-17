@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert, Lock, Database, Save, Download, Upload } from 'lucide-react';
+import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert, Lock, Database, Save, Download, Upload, Server } from 'lucide-react';
 
 interface GuideModalProps {
   onClose: () => void;
@@ -22,27 +22,34 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         <div className="p-6 space-y-6 text-slate-700">
           
           {/* Section Confidentialité / RGPD */}
-          <section className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-             <h3 className="font-bold text-slate-900 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
-              <Lock size={16} className="text-emerald-600" /> Confidentialité & Données (RGPD)
+          <section className="bg-amber-50 p-4 rounded-xl border border-amber-200">
+             <h3 className="font-bold text-amber-900 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+              <Lock size={16} className="text-amber-700" /> Confidentialité & Traitement des Données
             </h3>
-            <div className="text-xs text-slate-600 space-y-2">
+            <div className="text-xs text-amber-900/80 space-y-2">
               <p className="flex items-start gap-2">
-                <Database size={14} className="mt-0.5 shrink-0 text-slate-400" />
+                <Database size={14} className="mt-0.5 shrink-0 text-amber-600" />
                 <span>
-                  <strong>Aucun stockage serveur :</strong> Cette application est "stateless". Aucune conversation, aucun nom ni aucune donnée n'est sauvegardé sur nos serveurs.
+                  <strong>Stockage local (Application) :</strong> Cette application ne possède aucune base de données. Nous ne conservons aucun historique de vos conversations. Si vous fermez l'onglet, tout est effacé de votre appareil.
                 </span>
               </p>
-              <p>
-                <strong>Données volatiles :</strong> Toutes les données résident uniquement dans la mémoire vive de votre appareil. <strong>Si vous rafraîchissez la page ou fermez l'onglet, tout est définitivement effacé.</strong>
+              <p className="flex items-start gap-2">
+                <Server size={14} className="mt-0.5 shrink-0 text-amber-600" />
+                <span>
+                  <strong>Traitement externe (Google Gemini) :</strong> 
+                  Pour générer les réponses, le texte de votre conversation est envoyé aux serveurs de Google. 
+                  <br/>
+                  <strong>Attention :</strong> Google peut utiliser ces données pour améliorer ses services.
+                </span>
               </p>
-              <p>
-                <strong>Sous-traitance IA :</strong> Les échanges sont traités par l'API Google Gemini. Nous vous conseillons de ne jamais partager d'informations personnelles sensibles.
-              </p>
+              <div className="mt-2 p-2 bg-white/60 rounded border border-amber-200 font-medium">
+                <ShieldAlert size={14} className="inline mr-1 text-amber-600 mb-0.5" />
+                Règle d'or : Ne partagez jamais d'informations personnelles identifiables (Nom complet, adresse, téléphone, secrets) dans le dialogue. Utilisez un pseudo ou votre prénom seul.
+              </div>
             </div>
           </section>
 
-          {/* NOUVELLE SECTION : Sauvegarde et Reprise */}
+          {/* Section Sauvegarde et Reprise */}
           <section className="bg-blue-50 p-4 rounded-xl border border-blue-200">
             <h3 className="font-bold text-blue-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
               <Save size={16} className="text-blue-600" /> Sauvegarder & Reprendre sa session
