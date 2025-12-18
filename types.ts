@@ -16,23 +16,12 @@ export enum DomainType {
   SCIENTIFIC_TECHNICAL = "scientific_technical"
 }
 
-export interface CriterionLevel {
-  0: string;
-  10: string;
-  20: string;
-}
-
-export interface Criterion {
-  label: string;
-  levels: CriterionLevel;
-}
-
 export interface Message {
   id: string;
   role: 'user' | 'model';
   text: string;
   timestamp: number;
-  responseTimeMs?: number; // Temps de réflexion de l'utilisateur (ms)
+  responseTimeMs?: number;
 }
 
 export interface SessionConfig {
