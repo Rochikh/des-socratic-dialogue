@@ -20,6 +20,10 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
   const [showDeclarationModal, setShowDeclarationModal] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [declarationText, setDeclarationText] = useState('');
+  
+  // Chronométrie : on suit le timestamp de la dernière activité IA
+  const [lastActivityAt, setLastActivityAt] = useState<number>(Date.now());
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -29,13 +33,17 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
         setIsLoading(true);
         try {
           const res = await sendMessage(chatInstance, "Démarre la session selon le protocole pédagogique strict en me tutoyant.");
-          setMessages([{
+          const aiMsg: Message = {
             id: crypto.randomUUID(),
             role: 'model',
             text: res.text,
             timestamp: Date.now()
-          }]);
+          };
+          setMessages([aiMsg]);
+          setLastActivityAt(Date.now()); // Début du chrono pour l'étudiant
         } catch (e) { console.error(e); } finally { setIsLoading(false); }
+      } else if (messages.length > 0) {
+        setLastActivityAt(Date.now());
       }
     };
     initChat();
@@ -48,12 +56,15 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
   const handleSend = async () => {
     if (!inputText.trim() || !chatInstance || isLoading) return;
 
-    const startTimestamp = Date.now();
+    const now = Date.now();
+    const reflectionTime = now - lastActivityAt; // Véritable temps de réflexion
+
     const userMsg: Message = {
       id: crypto.randomUUID(),
       role: 'user',
       text: inputText,
-      timestamp: startTimestamp
+      timestamp: now,
+      responseTimeMs: reflectionTime // On attache le temps de réflexion au message utilisateur
     };
 
     setMessages(prev => [...prev, userMsg]);
@@ -61,15 +72,15 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
     setIsLoading(true);
 
     try {
-      const res = await sendMessage(chatInstance, userMsg.text, startTimestamp);
+      const res = await sendMessage(chatInstance, userMsg.text);
       const aiMsg: Message = {
         id: crypto.randomUUID(),
         role: 'model',
         text: res.text,
-        timestamp: Date.now(),
-        responseTimeMs: res.responseTimeMs // On stocke la vitesse de réflexion de l'élève
+        timestamp: Date.now()
       };
       setMessages(prev => [...prev, aiMsg]);
+      setLastActivityAt(Date.now()); // Reset du chrono pour le prochain tour
     } catch (error) {
       console.error(error);
     } finally {
@@ -115,11 +126,11 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] rounded-2xl px-5 py-4 shadow-sm ${msg.role === 'user' ? 'bg-slate-800 text-white rounded-br-none' : 'bg-white text-slate-800 border rounded-bl-none'}`}>
-              <div className="prose prose-sm max-w-none"><ReactMarkdown>{msg.text}</ReactMarkdown></div>
+              <div className="prose prose-sm max-w-none prose-slate"><ReactMarkdown>{msg.text}</ReactMarkdown></div>
               <div className="text-[9px] mt-2 opacity-60 uppercase font-bold tracking-widest">{msg.role === 'model' ? 'ARGOS AGENT' : config.studentName}</div>
             </div>
           </div>
@@ -136,7 +147,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ chatInstance, config, messag
 
       <div className="bg-white border-t p-4 sm:p-6">
         <div className="max-w-4xl mx-auto relative">
-          <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onKeyDown={handleKeyPress} placeholder="Écris ici ton raisonnement..." className="w-full bg-slate-50 rounded-xl px-4 py-3 border focus:ring-2 focus:ring-slate-500 min-h-[56px]" rows={1} />
+          <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onKeyDown={handleKeyPress} placeholder="Écris ici ton raisonnement..." className="w-full bg-slate-50 rounded-xl px-4 py-3 border focus:ring-2 focus:ring-indigo-500 min-h-[56px] resize-none" rows={1} />
           <button onClick={handleSend} disabled={!inputText.trim() || isLoading} className="absolute right-2 bottom-2 p-2 bg-slate-900 text-white rounded-lg disabled:opacity-50"><Send size={18} /></button>
         </div>
       </div>
