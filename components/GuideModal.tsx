@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert, Lock, Database, Save, Download, Upload, Server } from 'lucide-react';
+import { BrainCircuit, X, MessageCircleQuestion, ShieldAlert, Lock, Database, Save, Download, Upload, Server, Target, Gauge, Fingerprint } from 'lucide-react';
 
 interface GuideModalProps {
   onClose: () => void;
@@ -12,7 +12,7 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         <div className="sticky top-0 bg-white border-b border-slate-100 p-4 flex justify-between items-center z-10">
           <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
             <BrainCircuit className="text-indigo-600" />
-            Guide du Dialogue Évaluatif
+            Guide d'emploi ARGOS V8
           </h2>
           <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-full transition-colors">
             <X size={24} className="text-slate-500" />
@@ -21,99 +21,90 @@ export const GuideModal: React.FC<GuideModalProps> = ({ onClose }) => {
         
         <div className="p-6 space-y-6 text-slate-700">
           
-          {/* Section Confidentialité / RGPD */}
-          <section className="bg-amber-50 p-4 rounded-xl border border-amber-200">
-             <h3 className="font-bold text-amber-900 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
-              <Lock size={16} className="text-amber-700" /> Confidentialité & Traitement des Données
+          <section className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+            <h3 className="font-bold text-indigo-900 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+              <Target size={16} /> Le Discernement Disciplinaire
             </h3>
-            <div className="text-xs text-amber-900/80 space-y-2">
-              <p className="flex items-start gap-2">
-                <Database size={14} className="mt-0.5 shrink-0 text-amber-600" />
-                <span>
-                  <strong>Stockage local (Application) :</strong> Cette application ne possède aucune base de données. Nous ne conservons aucun historique de vos conversations. Si vous fermez l'onglet, tout est effacé de votre appareil.
-                </span>
-              </p>
-              <p className="flex items-start gap-2">
-                <Server size={14} className="mt-0.5 shrink-0 text-amber-600" />
-                <span>
-                  <strong>Traitement externe (Google Gemini) :</strong> 
-                  Pour générer les réponses, le texte de votre conversation est envoyé aux serveurs de Google. 
-                  <br/>
-                  <strong>Attention :</strong> Google peut utiliser ces données pour améliorer ses services.
-                </span>
-              </p>
-              <div className="mt-2 p-2 bg-white/60 rounded border border-amber-200 font-medium">
-                <ShieldAlert size={14} className="inline mr-1 text-amber-600 mb-0.5" />
-                Règle d'or : Ne partagez jamais d'informations personnelles identifiables (Nom complet, adresse, téléphone, secrets) dans le dialogue. Utilisez un pseudo ou votre prénom seul.
-              </div>
-            </div>
+            <p className="text-xs text-indigo-800 leading-relaxed">
+              Argos ne juge pas tes opinions, mais ta capacité à utiliser des <strong>critères d'expert</strong>. 
+              Si tu réponds avec du "sens commun" (idées reçues, généralités), ton score de discernement restera bas. 
+              Tu dois mobiliser les outils de ta discipline : preuves scientifiques, hiérarchie des normes juridiques, ou logique argumentative rigoureuse.
+            </p>
           </section>
 
-          {/* Section Sauvegarde et Reprise */}
-          <section className="bg-blue-50 p-4 rounded-xl border border-blue-200">
-            <h3 className="font-bold text-blue-900 mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
-              <Save size={16} className="text-blue-600" /> Sauvegarder & Reprendre sa session
-            </h3>
-            <div className="text-xs text-blue-800 space-y-3">
-              <p>Comme nous ne stockons rien, tu es responsable de la sauvegarde de ton travail si tu dois t'interrompre.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="bg-white/60 p-2 rounded border border-blue-100">
-                  <strong className="flex items-center gap-1 mb-1 text-blue-700"><Download size={12}/> 1. Sauvegarder</strong>
-                  À la fin de la session (écran Rapport), clique sur <strong>"Télécharger les Données (JSON)"</strong>. Conserve ce fichier sur ton ordinateur ou ta clé USB.
-                </div>
-                <div className="bg-white/60 p-2 rounded border border-blue-100">
-                  <strong className="flex items-center gap-1 mb-1 text-blue-700"><Upload size={12}/> 2. Reprendre</strong>
-                  Sur l'écran d'accueil, utilise le bouton <strong>"Reprendre une session"</strong> et sélectionne ton fichier JSON pour retrouver ton dialogue intact.
-                </div>
-              </div>
+          <section className="grid md:grid-cols-2 gap-4">
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2 text-xs uppercase">
+                <Gauge size={14} /> Temps de Réflexion
+              </h4>
+              <p className="text-[11px] text-slate-600">
+                Argos mesure le temps que tu passes à élaborer ta réponse. Une réponse complexe envoyée en moins de 5 secondes sera signalée comme une "anomalie de réflexion" (potentiel copier-coller).
+              </p>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2 text-xs uppercase">
+                <Fingerprint size={14} /> Audit de Cohérence
+              </h4>
+              <p className="text-[11px] text-slate-600">
+                À la fin, Argos compare ton style d'écriture et tes patterns de réponse avec ta <strong>Déclaration d'usage de l'IA</strong>. Sois sincère : l'honnêteté intellectuelle fait partie du score.
+              </p>
             </div>
           </section>
 
           <section>
-            <h3 className="font-bold text-lg text-slate-900 mb-2">À quoi sert cet outil ?</h3>
-            <p className="text-sm leading-relaxed">
-              Le DES n'est pas un chatbot classique qui donne des réponses. C'est un <strong>outil d'évaluation de processus</strong>. 
-              Il ne juge pas seulement ta réponse finale, mais la solidité de ton cheminement intellectuel.
+            <h3 className="font-bold text-lg text-slate-900 mb-2">Comprendre la "Trace"</h3>
+            <p className="text-sm leading-relaxed mb-3">
+              À partir de la phase 2 du dialogue, Argos affiche deux lignes techniques en bas de ses messages :
             </p>
+            <div className="space-y-2">
+              <div className="bg-white border-l-4 border-indigo-500 p-3 text-xs shadow-sm">
+                <strong>Exigence :</strong> Ce que tu dois démontrer dans ton prochain message (ex: citer une source, identifier une cause).
+              </div>
+              <div className="bg-white border-l-4 border-rose-500 p-3 text-xs shadow-sm">
+                <strong>Contrôle :</strong> La condition qui, si elle n'est pas remplie, invalidera ton raisonnement aux yeux d'Argos.
+              </div>
+            </div>
           </section>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-              <h4 className="font-bold text-indigo-900 mb-2 flex items-center gap-2">
+          <div className="grid md:grid-cols-2 gap-4 pt-4">
+            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+              <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
                 <MessageCircleQuestion size={18} />
-                Mode Tuteur·rice (Défense)
+                Tuteur (Défense)
               </h4>
-              <p className="text-xs text-indigo-800 leading-relaxed">
-                <strong>Ton rôle :</strong> Défendre une thèse.<br/>
-                <strong>Le rôle de l'IA :</strong> Avocat·e du diable.<br/>
-                <strong>Objectif :</strong> Justifier rationnellement ta position sans céder à la facilité.
+              <p className="text-[11px] text-blue-800">
+                Tu soutiens une thèse. Argos joue l'avocat du diable pour tester la <strong>solidité</strong> de tes preuves et ta capacité à répondre aux objections sans te contredire.
               </p>
             </div>
 
             <div className="bg-rose-50 p-4 rounded-xl border border-rose-100">
               <h4 className="font-bold text-rose-900 mb-2 flex items-center gap-2">
                 <ShieldAlert size={18} />
-                Mode Critique (Attaque)
+                Critique (Audit)
               </h4>
-              <p className="text-xs text-rose-800 leading-relaxed">
-                <strong>Ton rôle :</strong> Expert·e vérificateur·rice.<br/>
-                <strong>Le rôle de l'IA :</strong> Générer du contenu plausible mais faillible.<br/>
-                <strong>Objectif :</strong> Détecter les erreurs (biais, hallucinations, fautes logiques).
+              <p className="text-[11px] text-rose-800">
+                Argos te donne un texte "plausible" mais qui contient <strong>3 défauts majeurs</strong>. Ton rôle est de les trouver et de proposer un protocole pour les corriger.
               </p>
             </div>
           </div>
           
-          <div className="bg-slate-100 p-4 rounded-lg text-xs text-slate-500 italic text-center">
-            "Ce qui compte, ce n'est pas la réponse, c'est la preuve du travail de pensée."
-          </div>
+          <section className="bg-amber-50 p-4 rounded-xl border border-amber-200">
+             <h3 className="font-bold text-amber-900 mb-2 flex items-center gap-2 text-xs uppercase tracking-wide">
+              <Lock size={16} /> Confidentialité & RGPD
+            </h3>
+            <div className="text-[10px] text-amber-900/80 space-y-2">
+              <p><strong>Zéro Base de Données :</strong> Rien n'est stocké ici. Fermer l'onglet efface tout.</p>
+              <p><strong>Google Gemini :</strong> Votre texte est envoyé à Google pour analyse. Évitez toute donnée nominative (Nom de famille, adresse, secrets).</p>
+            </div>
+          </section>
         </div>
 
         <div className="p-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
           <button 
             onClick={onClose}
-            className="w-full bg-slate-900 text-white py-2 rounded-lg font-medium hover:bg-slate-800 transition-colors"
+            className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg"
           >
-            Fermer le guide
+            J'ai compris, démarrer
           </button>
         </div>
       </div>
