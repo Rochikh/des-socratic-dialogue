@@ -12,7 +12,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onSuccess }) => {
   // Le code est défini dans .env (VITE_ACCESS_CODE) ou par défaut "DES2025"
   // Note: Dans une vraie appli, import.meta.env est mieux, mais process.env fonctionne ici grâce au define de vite.config
   // @ts-ignore
-  const VALID_CODE = process.env.VITE_ACCESS_CODE || import.meta.env?.VITE_ACCESS_CODE || "DES2025";
+  const VALID_CODE = process.env.VITE_ACCESS_CODE || import.meta.env?.VITE_ACCESS_CODE || "DES226";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
