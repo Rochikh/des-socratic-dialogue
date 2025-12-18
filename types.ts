@@ -1,4 +1,3 @@
-
 export enum AppMode {
   LOGIN = 'LOGIN',
   SETUP = 'SETUP',
@@ -17,19 +16,30 @@ export enum DomainType {
   SCIENTIFIC_TECHNICAL = "scientific_technical"
 }
 
+export interface CriterionLevel {
+  0: string;
+  10: string;
+  20: string;
+}
+
+export interface Criterion {
+  label: string;
+  levels: CriterionLevel;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'model';
   text: string;
   timestamp: number;
-  responseTimeMs?: number; // Nouveau : pour analyse temporelle
+  responseTimeMs?: number; // Temps de réflexion de l'utilisateur (ms)
 }
 
 export interface SessionConfig {
   studentName: string;
   topic: string;
   mode: SocraticMode;
-  domain: DomainType; // Nouveau : typage disciplinaire
+  domain: DomainType;
 }
 
 export interface AnalysisData {
@@ -39,11 +49,11 @@ export interface AnalysisData {
   skepticismScore: number;
   processScore: number;
   reflectionScore: number;
-  disciplinaryDiscernmentScore: number; // Nouveau
-  aiDeclarationCoherenceScore: number; // Nouveau
+  disciplinaryDiscernmentScore: number;
+  aiDeclarationCoherenceScore: number;
   keyStrengths: string[];
   weaknesses: string[];
-  aiUsageAnalysis: string; // Nouveau
+  aiUsageAnalysis: string;
   transcript: Message[];
   aiDeclaration: string;
 }
